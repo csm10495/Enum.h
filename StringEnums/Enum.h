@@ -112,7 +112,7 @@ const inline std::string getString##NAME(NAME passedValue) \
 			bool found = false; \
 			if (splitOnEqual.size() == 0) { continue; }; \
 			TYPE value = count; \
-			assert(splitOnEqual.size() == 1 || splitOnEqual.size() == 2); \
+			ASSERT_AND_PRINT(splitOnEqual.size() == 1 || splitOnEqual.size() == 2); \
 			if (splitOnEqual.size() == 2) \
 			{ \
 				trim(splitOnEqual[1]); \
