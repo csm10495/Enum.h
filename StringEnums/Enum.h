@@ -82,13 +82,13 @@ inline std::string getStringFromSetOfStrings(const std::set<std::string> &set)
 }
 
 #ifdef DEBUG_ENUM
-#define CREATE_GLOBAL_DEBUG_MAP(TYPE) std::map<TYPE, std::set<std::string>> debugToStringMap;
-#define SAVE_DEBUG_MAP(MAP) debugToStringMap = MAP;
+#define CREATE_GLOBAL_DEBUG_MAP(NAME, TYPE) std::map<TYPE, std::set<std::string>> NAME##debugToStringMap;
+#define SAVE_DEBUG_MAP(NAME, MAP) NAME##debugToStringMap = MAP;
 #define DEBUG_PRINT_VALUE(THING) std::cout << #THING << ": " << THING << std::endl;
 #define DEBUG_PRINT(THING) std::cout << THING << std::endl;
 #else
-#define SAVE_DEBUG_MAP(MAP)
-#define CREATE_GLOBAL_DEBUG_MAP(TYPE)
+#define CREATE_GLOBAL_DEBUG_MAP(NAME, TYPE)
+#define SAVE_DEBUG_MAP(MAP, NAME)
 #define DEBUG_PRINT_VALUE(THING)
 #define DEBUG_PRINT(THING)
 #endif
@@ -97,7 +97,7 @@ inline std::string getStringFromSetOfStrings(const std::set<std::string> &set)
 typedef enum _##NAME : TYPE{ \
 	__VA_ARGS__ \
 } NAME; \
-CREATE_GLOBAL_DEBUG_MAP(TYPE); \
+CREATE_GLOBAL_DEBUG_MAP(NAME, TYPE); \
 const inline std::string getString##NAME(NAME passedValue) \
 { \
 	static std::map<TYPE, std::set<std::string>> toStringMap; \
@@ -124,7 +124,7 @@ const inline std::string getString##NAME(NAME passedValue) \
 					char * right = (char*)splitOnEqual[1].c_str(); \
 					value = (TYPE)std::strtoull(right, &pEnd, 0); \
 					/* Make sure that the right was evaluatable to a numeric*/ \
-					ASSERT_AND_PRINT(value != 0 && pEnd != 0); \
+					ASSERT_AND_PRINT(pEnd != 0); \
 				} \
 				count = value; \
 			} \
@@ -144,7 +144,7 @@ const inline std::string getString##NAME(NAME passedValue) \
 			DEBUG_PRINT_VALUE(count); \
 		} \
 	} \
-	SAVE_DEBUG_MAP(toStringMap); \
+	SAVE_DEBUG_MAP(NAME, toStringMap); \
 	auto itr = toStringMap.find((TYPE)passedValue); \
 	if (itr == toStringMap.end()) \
 	{ \
